@@ -11,8 +11,8 @@ not given a configuration file in the format:
 {
     "port": <LISTENING PORT>,
     "endpoints": [
-        <ENDPOINT IP ONE>,
-        <ENDPOINT IP TWO>,
+        <ENDPOINT IP:PORT>,
+        <ENDPOINT IP:PORT>,
         ...
     ]
 }
