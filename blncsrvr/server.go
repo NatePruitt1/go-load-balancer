@@ -10,7 +10,6 @@ func readFromConn(connection net.Conn, read_chan chan []byte, error_chan chan in
     n, err := connection.Read(buffer)
     if err != nil {
       error_chan <- -1
-      log.Println("Reading error recieved")
       return
     }
 
@@ -29,7 +28,6 @@ func writeChannelToConn(connection net.Conn, write_chan chan []byte, error_chan 
       n, err := connection.Write(buffer)
       if err != nil {
         error_chan <- -1
-        log.Println("Writing error recieved")
         return
       }
       written += n
@@ -51,30 +49,41 @@ func HandleConn(connection net.Conn, endpoint string) {
     log.Panic(err)
   }
 
-  read_chan := make(chan []byte, 4)
-  write_chan := make(chan []byte, 4)
-  read_error_code := make(chan int)
-  write_error_code := make(chan int)
+  client_read_chan := make(chan []byte, 4)
+  client_write_chan := make(chan []byte, 4)
+
+  server_read_chan := make(chan []byte, 4)
+  server_write_chan := make(chan []byte, 4)
+
+  client_error_code := make(chan int)
+  server_error_code := make(chan int)
   
   reading_closed := false
   writing_closed := false
 
-  go readFromConn(connection, read_chan, read_error_code)
-  go writeChannelToConn(server, write_chan, write_error_code)
+  go readFromConn(connection, client_read_chan, client_error_code)
+  go writeChannelToConn(connection, client_write_chan, client_error_code)
+  go readFromConn(server, server_read_chan, server_error_code)
+  go writeChannelToConn(server, server_write_chan, server_error_code)
+
 
   for !(reading_closed || writing_closed) {
     select {
-    case recieved := <- read_chan:
-      log.Println(string(recieved))
-      write_chan <- recieved
-    case <- read_error_code:
+    case recieved_from_client := <- client_read_chan:
+      server_write_chan <- recieved_from_client
+    case recieved_from_server := <- server_read_chan:
+      log.Println(string(recieved_from_server))
+      client_write_chan <- recieved_from_server
+    case <- server_error_code:
       reading_closed = true
       connection.Close()
       server.Close()
-    case <- write_error_code:
+      log.Println("Server error; closing connection")
+    case <- client_error_code:
       writing_closed = true
       connection.Close()
       server.Close()
+      log.Println("Client error; closing connection")
     default:
       continue;
     }
