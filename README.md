@@ -5,8 +5,9 @@ performs pass-through load balancing, meaning all requests go through this
 server.
 
 ## Usage
-After the load balancer has ben downloaded and compiled, it can be run. If it is
-not given a configuration file in the format:  
+The command to use the load balancer looks like this:  
+```./loadbalancer -f <CONFIG FILE NAME>```  
+The config file must have the following attributes in JSON format:  
 ```
 {
     "port": <LISTENING PORT>,
@@ -17,6 +18,3 @@ not given a configuration file in the format:
     ]
 }
 ```
-  
-This json file has to be given to the program as follows:  
-```./loadbalancer -f <JSON FILE NAME>```
