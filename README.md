@@ -5,7 +5,17 @@ performs pass-through load balancing, meaning all requests go through this
 server.
 
 ## Usage
-After downloading, you can compile it with a simple
-```go build -buildvcs=false```
-and can be run with 
-```./loadbalancer -f <CONFIG_FILE>```
+After the load balancer has ben downloaded and compiled, it can be run. If it is
+not given a configuration file in the format:\
+```
+{
+    "port": <LISTENING PORT>,
+    "endpoints": [
+        <ENDPOINT IP ONE>,
+        <ENDPOINT IP TWO>,
+        ...
+    ]
+}
+```
+\This json file has to be given to the program as follows:\
+```./loadbalancer -f <JSON FILE NAME>```
