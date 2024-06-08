@@ -6,7 +6,7 @@ server.
 
 ## Usage
 After the load balancer has ben downloaded and compiled, it can be run. If it is
-not given a configuration file in the format:\
+not given a configuration file in the format:  
 ```
 {
     "port": <LISTENING PORT>,
@@ -17,5 +17,6 @@ not given a configuration file in the format:\
     ]
 }
 ```
-\This json file has to be given to the program as follows:\
+  
+This json file has to be given to the program as follows:  
 ```./loadbalancer -f <JSON FILE NAME>```
