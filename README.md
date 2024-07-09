@@ -1,7 +1,7 @@
 # Go Balancing Server
 This is a very simple layer 4 load balancer, which only accepts TCP connections.
 It performs a simple round-robin algorithm on the connections received, and 
-performs pass-through load balancing, meaning all requests go through this
+performs pass-through load balancing, meaning all packets go through this
 server.
 
 ## Usage
